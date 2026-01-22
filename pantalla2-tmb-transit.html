@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0, user-scalable=no">
+    <title>TMB Live Portal - Emotions in Transit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            width: 1080px;
+            height: 1920px;
+            overflow: hidden;
+            display: flex;
+            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+            position: fixed;
+        }
+
+        /* Layout para pantalla vertical 1080x1920 */
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 1080px;
+            height: 1920px;
+        }
+
+        /* Header (previously sidebar) */
+        .sidebar {
+            background: #1a1a1a;
+            padding: 30px 40px;
+            border-bottom: 3px solid #E3000F;
+            width: 1080px;
+            min-height: 280px;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo h1 {
+            color: #E3000F;
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .logo p {
+            color: #999999;
+            font-size: 16px;
+            margin-top: 8px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        /* Controls Container */
+        .controls-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        /* Mode Toggle */
+        .mode-section {
+            margin-bottom: 0;
+        }
+
+        .mode-section h3 {
+            font-size: 13px;
+            color: #999999;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        .mode-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .mode-btn {
+            padding: 16px;
+            background: #2a2a2a;
+            border: 3px solid #3a3a3a;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 500;
+            color: #999999;
+        }
+
+        .mode-btn.active {
+            background: #E3000F;
+            border-color: #E3000F;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .mode-btn:hover {
+            border-color: #E3000F;
+        }
+
+        /* Lines Section */
+        .lines-section {
+            margin-bottom: 0;
+        }
+
+        .metro-lines {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .line-btn {
+            padding: 14px;
+            border: 3px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 18px;
+            text-align: center;
+            transition: all 0.3s;
+            opacity: 0.6;
+        }
+
+        .line-btn.active {
+            opacity: 1;
+            border-color: #ffffff;
+            box-shadow: 0 0 20px currentColor;
+            transform: scale(1.05);
+        }
+
+        .line-btn:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        /* Official TMB Metro line colors */
+        .line-l1 { background: #E3000F; color: #ffffff; }
+        .line-l2 { background: #9B3493; color: #ffffff; }
+        .line-l3 { background: #008442; color: #ffffff; }
+        .line-l4 { background: #FECD00; color: #000000; }
+        .line-l5 { background: #0E4C9A; color: #ffffff; }
+        .line-l9 { background: #F07E00; color: #ffffff; }
+        .line-l10 { background: #009EE0; color: #ffffff; }
+        .line-l11 { background: #AED03A; color: #000000; }
+
+        /* Transport types */
+        .transport-types {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .transport-btn {
+            flex: 1;
+            padding: 14px;
+            background: #2a2a2a;
+            border: 3px solid #3a3a3a;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            color: #999999;
+            transition: all 0.3s;
+        }
+
+        .transport-btn.active {
+            background: #E3000F;
+            border-color: #E3000F;
+            color: #ffffff;
+            font-weight: 600;
+            transform: scale(1.05);
+        }
+
+        .transport-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: #2a2a2a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 0;
+            grid-column: 1 / -1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0;
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #999999;
+            font-size: 13px;
+            font-weight: 400;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .stat-value {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 22px;
+            display: block;
+        }
+
+        /* Main content */
+        .main-content {
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            width: 1080px;
+            height: calc(1920px - 280px);
+        }
+
+        /* Map placeholder */
+        #map {
+            width: 100%;
+            height: 100%;
+            background: #000000;
+        }
+
+        /* Info overlay */
+        .info-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(26, 26, 26, 0.95);
+            border: 2px solid #E3000F;
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-overlay h2 {
+            color: #E3000F;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -0.3px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .info-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 14px;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .info-details {
+            flex: 1;
+        }
+
+        .info-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .info-subtitle {
+            font-size: 12px;
+            color: #999999;
+            font-weight: 400;
+        }
+
+        .info-time {
+            font-size: 16px;
+            color: #E3000F;
+            font-weight: 700;
+        }
+
+        /* Incidents */
+        .incidents-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(26, 26, 26, 0.95);
+            border: 2px solid #F07E00;
+            border-radius: 12px;
+            padding: 15px;
+            max-height: 150px;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .incident-item {
+            display: flex;
+            align-items: start;
+            padding: 10px;
+            background: #2a2a2a;
+            border-left: 4px solid #F07E00;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        .incident-icon {
+            color: #F07E00;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        /* Loading state */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #3a3a3a;
+            border-top-color: #E3000F;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Connection status */
+        .connection-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 8px 14px;
+            background: #2a2a2a;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4caf50;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-dot.offline {
+            background: #E3000F;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #E3000F;
+            border-radius: 3px;
+        }
+
+        /* Transport Animations */
+        .transport-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Metro Animation */
+        .metro-line {
+            position: absolute;
+            height: 6px;
+            background: linear-gradient(90deg, transparent, currentColor, transparent);
+            opacity: 0.6;
+            animation: pulse-line 3s ease-in-out infinite;
+            border-radius: 3px;
+        }
+
+        @keyframes pulse-line {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        .metro-train {
+            position: absolute;
+            width: 80px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            box-shadow: 0 0 30px currentColor;
+            animation: train-move 15s linear infinite;
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .metro-train:hover {
+            transform: scale(1.2);
+        }
+
+        .metro-train::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            background: inherit;
+            filter: blur(15px);
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        @keyframes train-move {
+            0% { transform: translateX(-100px); opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { transform: translateX(calc(1080px + 100px)); opacity: 0; }
+        }
+
+        /* Bus Animation */
+        .bus-route {
+            position: absolute;
+            stroke-dasharray: 8, 15;
+            stroke-width: 3;
+            stroke: #666666;
+            fill: none;
+            opacity: 0.4;
+            animation: dash 30s linear infinite;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -1000; }
+        }
+
+        .bus {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: #E3000F;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 6px 20px rgba(227, 0, 15, 0.5);
+            animation: bus-move 20s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .bus:hover {
+            transform: scale(1.25) rotate(5deg);
+        }
+
+        .bus::after {
+            content: '';
+            position: absolute;
+            width: 130%;
+            height: 130%;
+            border-radius: 12px;
+            border: 3px solid #E3000F;
+            animation: radar 2s ease-out infinite;
+        }
+
+        @keyframes radar {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        @keyframes bus-move {
+            0%, 100% { 
+                left: 10%; 
+                top: 20%;
+            }
+            25% { 
+                left: 80%; 
+                top: 30%;
+            }
+            50% { 
+                left: 70%; 
+                top: 70%;
+            }
+            75% { 
+                left: 20%; 
+                top: 60%;
+            }
+        }
+
+        /* Bicing Animation */
+        .bicing-station {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(42, 42, 42, 0.9);
+            border: 4px solid #AED03A;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: station-pulse 4s ease-in-out infinite;
+        }
+
+        .bicing-station:hover {
+            transform: scale(1.3);
+            border-width: 5px;
+            box-shadow: 0 0 40px rgba(174, 208, 58, 0.7);
+        }
+
+        @keyframes station-pulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(174, 208, 58, 0.4);
+            }
+            50% { 
+                transform: scale(1.08);
+                box-shadow: 0 0 30px rgba(174, 208, 58, 0.6);
+            }
+        }
+
+        .bicing-icon {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+
+        .bicing-count {
+            font-size: 14px;
+            font-weight: 700;
+            color: #AED03A;
+        }
+
+        .bike {
+            position: absolute;
+            font-size: 36px;
+            animation: bike-ride 12s linear infinite;
+            filter: drop-shadow(0 3px 12px rgba(174, 208, 58, 0.7));
+        }
+
+        @keyframes bike-ride {
+            0% { 
+                left: -5%; 
+                top: 25%;
+                transform: rotate(-10deg);
+            }
+            20% {
+                top: 35%;
+            }
+            40% {
+                top: 45%;
+            }
+            60% {
+                top: 55%;
+            }
+            80% {
+                top: 40%;
+            }
+            100% { 
+                left: 105%; 
+                top: 30%;
+                transform: rotate(10deg);
+            }
+        }
+
+        /* Particle system for ambient movement */
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #E3000F;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: particle-float 8s linear infinite;
+            box-shadow: 0 0 5px #E3000F;
+        }
+
+        @keyframes particle-float {
+            0% {
+                transform: translate(0, 0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(120px, -120px);
+                opacity: 0;
+            }
+        }
+
+        /* Connection lines animation */
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(227, 0, 15, 0.4), transparent);
+            transform-origin: left center;
+            animation: line-draw 3s ease-in-out infinite;
+        }
+
+        @keyframes line-draw {
+            0%, 100% { 
+                width: 0; 
+                opacity: 0;
+            }
+            50% { 
+                width: 250px; 
+                opacity: 1;
+            }
+        }
+
+        /* Transit info tooltip */
+        .transit-tooltip {
+            position: absolute;
+            background: rgba(26, 26, 26, 0.98);
+            border: 3px solid #E3000F;
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 15px;
+            font-weight: 500;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            box-shadow: 0 8px 30px rgba(227, 0, 15, 0.4);
+        }
+
+        .transit-tooltip.show {
+            opacity: 1;
+        }
+
+        .tooltip-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #E3000F;
+            font-size: 17px;
+        }
+
+        .tooltip-info {
+            color: #999999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header (previously Sidebar) -->
+        <div class="sidebar">
+            <div class="logo">
+                <h1>TMB LIVE</h1>
+                <p>Emotions in Transit</p>
+            </div>
+
+            <div class="controls-container">
+                <!-- Mode -->
+                <div class="mode-section">
+                    <h3>Mode</h3>
+                    <div class="mode-buttons">
+                        <button class="mode-btn active" data-mode="live">
+                            <div>🔴 LIVE</div>
+                        </button>
+                        <button class="mode-btn" data-mode="historic">
+                            <div>📊 Data</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Metro Lines -->
+                <div class="lines-section">
+                    <h3>Metro Lines</h3>
+                    <div class="metro-lines">
+                        <button class="line-btn line-l1" data-line="L1">L1</button>
+                        <button class="line-btn line-l2" data-line="L2">L2</button>
+                        <button class="line-btn line-l3" data-line="L3">L3</button>
+                        <button class="line-btn line-l4" data-line="L4">L4</button>
+                        <button class="line-btn line-l5 active" data-line="L5">L5</button>
+                        <button class="line-btn line-l9" data-line="L9">L9</button>
+                        <button class="line-btn line-l10" data-line="L10">L10</button>
+                        <button class="line-btn line-l11" data-line="L11">L11</button>
+                    </div>
+
+                    <!-- Transport Types -->
+                    <div class="transport-types">
+                        <button class="transport-btn active" data-type="metro">Metro</button>
+                        <button class="transport-btn" data-type="bus">Bus</button>
+                        <button class="transport-btn" data-type="bicing">Bicing</button>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-section">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">Active Trains</span>
+                            <span class="stat-value" id="active-trains">--</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Occupancy</span>
+                            <span class="stat-value" id="avg-occupancy">--</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Incidents</span>
+                            <span class="stat-value" id="incidents-count">--</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Last Update</span>
+                            <span class="stat-value" id="last-update">--</span>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #3a3a3a;">
+                        <span style="color: #999999; font-size: 12px;">API: </span>
+                        <span id="api-status" style="color: #AED03A; font-size: 12px; font-weight: 600;">Initializing...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="connection-status">
+                <div class="status-dot" id="status-dot"></div>
+                <span id="status-text">Live</span>
+            </div>
+
+            <div id="map">
+                <div class="transport-container" id="transport-container">
+                    <!-- Animations will be injected here -->
+                </div>
+                <div class="transit-tooltip" id="tooltip">
+                    <div class="tooltip-title"></div>
+                    <div class="tooltip-info"></div>
+                </div>
+            </div>
+
+            <!-- Info Overlay -->
+            <div class="info-overlay" id="info-overlay" style="display: none;">
+                <h2 id="overlay-title">Tren 523 - L5</h2>
+                <div id="info-content">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+
+            <!-- Incidents Panel -->
+            <div class="incidents-panel" id="incidents-panel" style="display: none;">
+                <div id="incidents-content">
+                    <!-- Dynamic incidents -->
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 15px; color: #999999; font-weight: 400;">Loading TMB data...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // TMB API Configuration
+        const TMB_CONFIG = {
+            APP_ID: 'c6f33d0c',
+            APP_KEY: 'e3fb4615a39da174072051f5b2ccc5b3',
+            BASE_URL: 'https://api.tmb.cat/v1',
+            ENDPOINTS: {
+                ibus: '/ibus/lines/',
+                metro: '/transit/linies/metro/',
+                planner: '/planner/plan',
+                bicing: 'https://api.bsmsa.eu/ext/api/bsm/gbfs/v2/en/station_information'
+            }
+        };
+
+        // State
+        let currentLine = 'L5';
+        let currentTransport = 'metro';
+        let currentMode = 'live';
+        let updateInterval;
+        let animationElements = [];
+        let realTimeData = {
+            trains: [],
+            buses: [],
+            bicingStations: [],
+            incidents: []
+        };
+
+        // Line colors
+        const lineColors = {
+            'L1': '#E3000F',
+            'L2': '#9B3493',
+            'L3': '#008442',
+            'L4': '#FECD00',
+            'L5': '#0E4C9A',
+            'L9': '#F07E00',
+            'L10': '#009EE0',
+            'L11': '#AED03A'
+        };
+
+        // Line route numbers for API
+        const lineRoutes = {
+            'L1': '1',
+            'L2': '2',
+            'L3': '3',
+            'L4': '4',
+            'L5': '5',
+            'L9': '9',
+            'L10': '10',
+            'L11': '11'
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeEventListeners();
+            startLiveUpdates();
+            createTransportAnimations();
+        });
+
+        function initializeEventListeners() {
+            // Mode buttons
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentMode = btn.dataset.mode;
+                    updateDisplay();
+                });
+            });
+
+            // Line buttons
+            document.querySelectorAll('.line-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.line-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentLine = btn.dataset.line;
+                    fetchLineData();
+                });
+            });
+
+            // Transport buttons
+            document.querySelectorAll('.transport-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.transport-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentTransport = btn.dataset.type;
+                    createTransportAnimations();
+                    updateDisplay();
+                });
+            });
+        }
+
+        function startLiveUpdates() {
+            fetchLineData();
+            fetchIncidents();
+            
+            // Update every 30 seconds
+            updateInterval = setInterval(() => {
+                if (currentMode === 'live') {
+                    fetchLineData();
+                    fetchIncidents();
+                }
+            }, 30000);
+        }
+
+        async function fetchLineData() {
+            try {
+                updateAPIStatus('Fetching...');
+                
+                if (currentTransport === 'metro') {
+                    await fetchMetroData();
+                } else if (currentTransport === 'bus') {
+                    await fetchBusData();
+                } else if (currentTransport === 'bicing') {
+                    await fetchBicingData();
+                }
+
+                updateAPIStatus('Connected');
+                document.getElementById('status-dot').classList.remove('offline');
+            } catch (error) {
+                console.error('Error fetching TMB data:', error);
+                updateAPIStatus('Using demo data');
+                document.getElementById('status-dot').classList.add('offline');
+                
+                // Show demo data
+                showDemoData();
+            }
+
+            hideLoading();
+        }
+
+        async function fetchMetroData() {
+            try {
+                // Try to fetch real-time metro data
+                const lineRoute = lineRoutes[currentLine];
+                const url = `${TMB_CONFIG.BASE_URL}${TMB_CONFIG.ENDPOINTS.ibus}${lineRoute}?app_id=${TMB_CONFIG.APP_ID}&app_key=${TMB_CONFIG.APP_KEY}`;
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Process real data
+                    if (data && data.data && data.data.ibus) {
+                        realTimeData.trains = data.data.ibus.slice(0, 5);
+                        updateStats({ trains: realTimeData.trains.length });
+                    } else {
+                        throw new Error('No data available');
+                    }
+                } else {
+                    throw new Error(`API returned ${response.status}`);
+                }
+            } catch (error) {
+                console.log('Metro API error, using simulated data:', error.message);
+                // Generate simulated real-time data
+                generateSimulatedMetroData();
+            }
+        }
+
+        async function fetchBusData() {
+            try {
+                // Fetch bus lines data
+                const url = `${TMB_CONFIG.BASE_URL}/ibus/lines?app_id=${TMB_CONFIG.APP_ID}&app_key=${TMB_CONFIG.APP_KEY}`;
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data && data.data) {
+                        realTimeData.buses = data.data.slice(0, 6);
+                        updateStats({ buses: realTimeData.buses.length });
+                    } else {
+                        throw new Error('No bus data');
+                    }
+                } else {
+                    throw new Error(`Bus API returned ${response.status}`);
+                }
+            } catch (error) {
+                console.log('Bus API error, using simulated data:', error.message);
+                generateSimulatedBusData();
+            }
+        }
+
+        async function fetchBicingData() {
+            try {
+                // Fetch Bicing stations from BSM API (public endpoint)
+                const response = await fetch(TMB_CONFIG.ENDPOINTS.bicing);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data && data.data && data.data.stations) {
+                        // Get random sample of stations
+                        const allStations = data.data.stations;
+                        realTimeData.bicingStations = allStations
+                            .sort(() => 0.5 - Math.random())
+                            .slice(0, 7);
+                        
+                        updateStats({ 
+                            stations: realTimeData.bicingStations.length,
+                            bikes: realTimeData.bicingStations.reduce((sum, s) => sum + (s.capacity || 20), 0)
+                        });
+                    } else {
+                        throw new Error('No bicing data');
+                    }
+                } else {
+                    throw new Error(`Bicing API returned ${response.status}`);
+                }
+            } catch (error) {
+                console.log('Bicing API error, using simulated data:', error.message);
+                generateSimulatedBicingData();
+            }
+        }
+
+        function generateSimulatedMetroData() {
+            realTimeData.trains = Array.from({ length: 5 }, (_, i) => ({
+                id: `M${Math.floor(Math.random() * 900) + 100}`,
+                line: currentLine,
+                direction: Math.random() > 0.5 ? 'A' : 'B',
+                eta: Math.floor(Math.random() * 8) + 1,
+                occupancy: Math.floor(Math.random() * 40) + 30
+            }));
+            updateStats({ trains: realTimeData.trains.length });
+        }
+
+        function generateSimulatedBusData() {
+            realTimeData.buses = Array.from({ length: 6 }, (_, i) => ({
+                id: `H${Math.floor(Math.random() * 20) + 1}`,
+                line: `H${i + 1}`,
+                eta: Math.floor(Math.random() * 5) + 1,
+                occupancy: Math.floor(Math.random() * 30) + 40
+            }));
+            updateStats({ buses: realTimeData.buses.length });
+        }
+
+        function generateSimulatedBicingData() {
+            realTimeData.bicingStations = Array.from({ length: 7 }, (_, i) => ({
+                station_id: `${400 + i}`,
+                name: `Estació ${i + 1}`,
+                num_bikes_available: Math.floor(Math.random() * 15) + 2,
+                num_docks_available: Math.floor(Math.random() * 10) + 5,
+                capacity: 20
+            }));
+            updateStats({ 
+                stations: realTimeData.bicingStations.length,
+                bikes: realTimeData.bicingStations.reduce((sum, s) => sum + s.num_bikes_available, 0)
+            });
+        }
+
+        function updateAPIStatus(status) {
+            const apiStatusEl = document.getElementById('api-status');
+            if (apiStatusEl) {
+                apiStatusEl.textContent = status;
+            }
+        }
+
+        async function fetchIncidents() {
+            try {
+                // Fetch transit incidents from TMB
+                const url = `${TMB_CONFIG.BASE_URL}/transit/linies/metro?app_id=${TMB_CONFIG.APP_ID}&app_key=${TMB_CONFIG.APP_KEY}`;
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Look for incidents in the data
+                    if (data && data.features) {
+                        const lineIncidents = data.features
+                            .filter(f => f.properties && f.properties.NOM_LINIA === currentLine)
+                            .filter(f => f.properties.ESTAT !== 'Normal' && f.properties.ESTAT !== 'Servei normal');
+                        
+                        realTimeData.incidents = lineIncidents;
+                        displayIncidents(lineIncidents);
+                    } else {
+                        realTimeData.incidents = [];
+                        displayIncidents([]);
+                    }
+                } else {
+                    throw new Error(`Incidents API returned ${response.status}`);
+                }
+            } catch (error) {
+                console.log('Incidents API error:', error.message);
+                // Generate random incidents for demo
+                generateSimulatedIncidents();
+            }
+        }
+
+        function generateSimulatedIncidents() {
+            const incidentTypes = [
+                'Retards puntuals per incidència tècnica',
+                'Servei lent per afluència de viatgers',
+                'Circulació amb intervals irregulars',
+                'Servei afectat per obres programades'
+            ];
+            
+            const hasIncident = Math.random() > 0.6; // 40% chance of incident
+            
+            if (hasIncident) {
+                realTimeData.incidents = [{
+                    type: incidentTypes[Math.floor(Math.random() * incidentTypes.length)],
+                    line: currentLine,
+                    timestamp: new Date()
+                }];
+            } else {
+                realTimeData.incidents = [];
+            }
+            
+            displayIncidents(realTimeData.incidents);
+        }
+
+        function updateStats(data) {
+            // Update statistics based on current transport type
+            const now = new Date();
+            
+            if (currentTransport === 'metro') {
+                document.getElementById('active-trains').textContent = data.trains || realTimeData.trains.length || '--';
+                const avgOccupancy = realTimeData.trains.length > 0 
+                    ? Math.round(realTimeData.trains.reduce((sum, t) => sum + (t.occupancy || 50), 0) / realTimeData.trains.length)
+                    : Math.floor(Math.random() * 30) + 45;
+                document.getElementById('avg-occupancy').textContent = avgOccupancy + '%';
+            } else if (currentTransport === 'bus') {
+                document.getElementById('active-trains').textContent = data.buses || realTimeData.buses.length || '--';
+                const avgOccupancy = realTimeData.buses.length > 0 
+                    ? Math.round(realTimeData.buses.reduce((sum, b) => sum + (b.occupancy || 60), 0) / realTimeData.buses.length)
+                    : Math.floor(Math.random() * 20) + 50;
+                document.getElementById('avg-occupancy').textContent = avgOccupancy + '%';
+            } else if (currentTransport === 'bicing') {
+                document.getElementById('active-trains').textContent = data.stations || realTimeData.bicingStations.length || '--';
+                const totalBikes = data.bikes || realTimeData.bicingStations.reduce((sum, s) => sum + (s.num_bikes_available || 0), 0);
+                document.getElementById('avg-occupancy').textContent = totalBikes + ' 🚲';
+            }
+            
+            document.getElementById('incidents-count').textContent = realTimeData.incidents.length;
+            document.getElementById('last-update').textContent = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            });
+        }
+
+        function updateMap(data) {
+            // This would integrate with a mapping library (Leaflet, Mapbox, etc.)
+            // For now, show info overlay with sample data
+            showInfoOverlay();
+        }
+
+        function showInfoOverlay() {
+            const overlay = document.getElementById('info-overlay');
+            const content = document.getElementById('info-content');
+            
+            overlay.style.display = 'block';
+            
+            content.innerHTML = `
+                <div class="info-item">
+                    <div class="info-icon line-${currentLine.toLowerCase()}">${currentLine}</div>
+                    <div class="info-details">
+                        <div class="info-title">Tren ${Math.floor(Math.random() * 900) + 100}</div>
+                        <div class="info-subtitle">Direcció: ${getLineDirection(currentLine)}</div>
+                    </div>
+                    <div class="info-time">${Math.floor(Math.random() * 5) + 1} min</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon line-${currentLine.toLowerCase()}">${currentLine}</div>
+                    <div class="info-details">
+                        <div class="info-title">Tren ${Math.floor(Math.random() * 900) + 100}</div>
+                        <div class="info-subtitle">Direcció: ${getLineDirection(currentLine)}</div>
+                    </div>
+                    <div class="info-time">${Math.floor(Math.random() * 5) + 3} min</div>
+                </div>
+            `;
+        }
+
+        function displayIncidents(incidents) {
+            const panel = document.getElementById('incidents-panel');
+            const content = document.getElementById('incidents-content');
+            
+            if (incidents && incidents.length > 0) {
+                panel.style.display = 'block';
+                
+                content.innerHTML = incidents.map(incident => {
+                    const message = incident.type || incident.properties?.ESTAT || 'Incidència en el servei';
+                    const line = incident.line || incident.properties?.NOM_LINIA || currentLine;
+                    
+                    return `
+                        <div class="incident-item">
+                            <span class="incident-icon">⚠️</span>
+                            <div>
+                                <strong>${line}</strong> - ${message}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+
+        function showDemoData() {
+            // Show demo data when API is unavailable
+            updateStats({});
+            showInfoOverlay();
+            showDemoIncidents();
+        }
+
+        function showDemoIncidents() {
+            displayIncidents({});
+        }
+
+        function getLineDirection(line) {
+            const directions = {
+                'L1': 'Hospital de Bellvitge / Fondo',
+                'L2': 'Paral·lel / Badalona Pompeu Fabra',
+                'L3': 'Zona Universitària / Trinitat Nova',
+                'L4': 'Trinitat Nova / La Pau',
+                'L5': 'Cornellà Centre / Vall d\'Hebron',
+                'L9': 'La Sagrera / Aeroport T1',
+                'L10': 'Zona Universitària / Gorg',
+                'L11': 'Trinitat Nova / Can Cuiàs'
+            };
+            return directions[line] || 'Unknown';
+        }
+
+        function updateDisplay() {
+            if (currentMode === 'live') {
+                fetchLineData();
+            }
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Transport Animation Functions
+        function createTransportAnimations() {
+            const container = document.getElementById('transport-container');
+            
+            // Clear existing animations
+            container.innerHTML = '';
+            animationElements = [];
+
+            // Create background particles
+            createParticles(container, 20);
+
+            switch(currentTransport) {
+                case 'metro':
+                    createMetroAnimation(container);
+                    break;
+                case 'bus':
+                    createBusAnimation(container);
+                    break;
+                case 'bicing':
+                    createBicingAnimation(container);
+                    break;
+            }
+        }
+
+        function createParticles(container, count) {
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        function createMetroAnimation(container) {
+            const lineColor = lineColors[currentLine];
+            
+            // Create metro lines
+            for (let i = 0; i < 3; i++) {
+                const line = document.createElement('div');
+                line.className = 'metro-line';
+                line.style.width = '100%';
+                line.style.top = (25 + i * 25) + '%';
+                line.style.color = lineColor;
+                line.style.animationDelay = (i * 1) + 's';
+                container.appendChild(line);
+            }
+
+            // Create metro trains using real data
+            const trainsToShow = realTimeData.trains.length > 0 ? realTimeData.trains : 
+                Array.from({ length: 3 }, (_, i) => ({
+                    id: `M${Math.floor(Math.random() * 900) + 100}`,
+                    line: currentLine,
+                    eta: Math.floor(Math.random() * 5) + 1,
+                    occupancy: Math.floor(Math.random() * 40) + 30
+                }));
+
+            trainsToShow.forEach((trainData, i) => {
+                setTimeout(() => {
+                    const train = document.createElement('div');
+                    train.className = 'metro-train';
+                    train.style.background = lineColor;
+                    train.style.color = ['L4', 'L11'].includes(currentLine) ? '#000000' : '#ffffff';
+                    train.style.top = (20 + (i % 3) * 25) + '%';
+                    train.textContent = currentLine;
+                    train.style.animationDelay = (i * 5) + 's';
+                    train.style.animationDuration = (12 + Math.random() * 6) + 's';
+                    
+                    // Add click event for info
+                    train.addEventListener('click', () => {
+                        showTooltip(train, 
+                            `Tren ${trainData.id || (Math.floor(Math.random() * 900) + 100)}`, 
+                            `${currentLine} • ${trainData.eta || (Math.floor(Math.random() * 5) + 1)} min • ${trainData.occupancy || 50}% ocupació`
+                        );
+                    });
+                    
+                    container.appendChild(train);
+                    animationElements.push(train);
+                }, i * 2000);
+            });
+
+            // Create connection lines
+            for (let i = 0; i < 5; i++) {
+                const line = document.createElement('div');
+                line.className = 'connection-line';
+                line.style.left = Math.random() * 80 + '%';
+                line.style.top = Math.random() * 80 + '%';
+                line.style.animationDelay = Math.random() * 3 + 's';
+                line.style.transform = `rotate(${Math.random() * 360}deg)`;
+                container.appendChild(line);
+            }
+        }
+
+        function createBusAnimation(container) {
+            // Create SVG for bus routes
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.style.position = 'absolute';
+            svg.style.width = '100%';
+            svg.style.height = '100%';
+            svg.style.top = '0';
+            svg.style.left = '0';
+            
+            // Create curved paths for bus routes
+            for (let i = 0; i < 3; i++) {
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                const startX = 10 + Math.random() * 20;
+                const startY = 20 + i * 25;
+                const endX = 80 + Math.random() * 10;
+                const endY = 30 + i * 20;
+                const cp1X = 30 + Math.random() * 20;
+                const cp1Y = startY + 10;
+                const cp2X = 60 + Math.random() * 20;
+                const cp2Y = endY - 10;
+                
+                path.setAttribute('d', `M ${startX},${startY} C ${cp1X},${cp1Y} ${cp2X},${cp2Y} ${endX},${endY}`);
+                path.setAttribute('class', 'bus-route');
+                path.style.animationDelay = (i * 2) + 's';
+                svg.appendChild(path);
+            }
+            
+            container.appendChild(svg);
+
+            // Create buses using real data
+            const busesToShow = realTimeData.buses.length > 0 ? realTimeData.buses.slice(0, 4) :
+                Array.from({ length: 4 }, (_, i) => ({
+                    id: `H${Math.floor(Math.random() * 20) + 1}`,
+                    line: `H${i + 1}`,
+                    eta: Math.floor(Math.random() * 3) + 1,
+                    occupancy: Math.floor(Math.random() * 30) + 40
+                }));
+
+            busesToShow.forEach((busData, i) => {
+                setTimeout(() => {
+                    const bus = document.createElement('div');
+                    bus.className = 'bus';
+                    bus.textContent = '🚌';
+                    bus.style.animationDelay = (i * 5) + 's';
+                    bus.style.animationDuration = (15 + Math.random() * 10) + 's';
+                    
+                    bus.addEventListener('click', () => {
+                        showTooltip(bus, 
+                            `Bus ${busData.id || busData.line}`, 
+                            `Pròxima parada • ${busData.eta || (Math.floor(Math.random() * 3) + 1)} min • ${busData.occupancy || 60}% ocupació`
+                        );
+                    });
+                    
+                    container.appendChild(bus);
+                    animationElements.push(bus);
+                }, i * 3000);
+            });
+        }
+
+        function createBicingAnimation(container) {
+            // Use real bicing stations data or generate simulated
+            const stationsToShow = realTimeData.bicingStations.length > 0 ? 
+                realTimeData.bicingStations : 
+                [
+                    { station_id: '400', name: 'Estació 1', num_bikes_available: 12, num_docks_available: 8, x: 20, y: 25 },
+                    { station_id: '401', name: 'Estació 2', num_bikes_available: 5, num_docks_available: 15, x: 45, y: 35 },
+                    { station_id: '402', name: 'Estació 3', num_bikes_available: 8, num_docks_available: 12, x: 70, y: 30 },
+                    { station_id: '403', name: 'Estació 4', num_bikes_available: 15, num_docks_available: 5, x: 35, y: 60 },
+                    { station_id: '404', name: 'Estació 5', num_bikes_available: 3, num_docks_available: 17, x: 60, y: 65 },
+                    { station_id: '405', name: 'Estació 6', num_bikes_available: 10, num_docks_available: 10, x: 80, y: 55 },
+                    { station_id: '406', name: 'Estació 7', num_bikes_available: 7, num_docks_available: 13, x: 25, y: 75 }
+                ];
+
+            stationsToShow.forEach((station, i) => {
+                const stationEl = document.createElement('div');
+                stationEl.className = 'bicing-station';
+                
+                // Use real coordinates or fallback to distributed positions
+                const x = station.x || (15 + (i % 3) * 30);
+                const y = station.y || (25 + Math.floor(i / 3) * 25);
+                
+                stationEl.style.left = x + '%';
+                stationEl.style.top = y + '%';
+                stationEl.style.animationDelay = (i * 0.5) + 's';
+                
+                const bikes = station.num_bikes_available || Math.floor(Math.random() * 15) + 2;
+                const docks = station.num_docks_available || Math.floor(Math.random() * 10) + 5;
+                
+                stationEl.innerHTML = `
+                    <div class="bicing-icon">🚲</div>
+                    <div class="bicing-count">${bikes}</div>
+                `;
+                
+                stationEl.addEventListener('click', () => {
+                    showTooltip(stationEl, 
+                        station.name || `Estació Bicing ${station.station_id}`, 
+                        `${bikes} bicis • ${docks} ancoratges lliures`
+                    );
+                });
+                
+                container.appendChild(stationEl);
+                animationElements.push(stationEl);
+            });
+
+            // Create moving bikes
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const bike = document.createElement('div');
+                    bike.className = 'bike';
+                    bike.textContent = '🚴';
+                    bike.style.animationDelay = (i * 2.4) + 's';
+                    bike.style.animationDuration = (10 + Math.random() * 4) + 's';
+                    container.appendChild(bike);
+                    animationElements.push(bike);
+                }, i * 1500);
+            }
+
+            // Create connection lines between stations
+            for (let i = 0; i < stationsToShow.length - 1; i++) {
+                const line = document.createElement('div');
+                line.className = 'connection-line';
+                
+                const x1 = stationsToShow[i].x || (15 + (i % 3) * 30);
+                const y1 = stationsToShow[i].y || (25 + Math.floor(i / 3) * 25);
+                const x2 = stationsToShow[i + 1].x || (15 + ((i + 1) % 3) * 30);
+                const y2 = stationsToShow[i + 1].y || (25 + Math.floor((i + 1) / 3) * 25);
+                
+                line.style.left = x1 + '%';
+                line.style.top = y1 + '%';
+                
+                const dx = x2 - x1;
+                const dy = y2 - y1;
+                const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                line.style.width = distance + '%';
+                line.style.transform = `rotate(${angle}deg)`;
+                line.style.animationDelay = (i * 0.8) + 's';
+                container.appendChild(line);
+            }
+        }
+
+        function showTooltip(element, title, info) {
+            const tooltip = document.getElementById('tooltip');
+            const rect = element.getBoundingClientRect();
+            
+            tooltip.querySelector('.tooltip-title').textContent = title;
+            tooltip.querySelector('.tooltip-info').textContent = info;
+            
+            tooltip.style.left = (rect.left + rect.width / 2) + 'px';
+            tooltip.style.top = (rect.top - 60) + 'px';
+            tooltip.style.transform = 'translateX(-50%)';
+            tooltip.classList.add('show');
+            
+            setTimeout(() => {
+                tooltip.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

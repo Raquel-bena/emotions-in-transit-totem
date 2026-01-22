@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=800, height=480, initial-scale=1.0">
+    <title>Clima - Emotions in Transit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: #ffffff;
+            width: 800px;
+            height: 480px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+        }
+
+        .weather-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+            background: radial-gradient(circle at 30% 50%, rgba(227, 0, 15, 0.1), transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(14, 76, 154, 0.1), transparent 50%);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .location {
+            font-size: 18px;
+            font-weight: 600;
+            color: #999999;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .main-weather {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 40px;
+        }
+
+        .temperature-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .temp-main {
+            font-size: 120px;
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg, #E3000F, #0E4C9A);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .weather-icon {
+            font-size: 100px;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 24px;
+            font-weight: 500;
+            color: #cccccc;
+            text-transform: capitalize;
+            margin-top: 10px;
+        }
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .detail-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px 20px;
+            text-align: center;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #999999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .detail-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .footer {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .update-time {
+            font-size: 12px;
+            font-weight: 400;
+            color: #666666;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(227, 0, 15, 0.2);
+            border-top-color: #E3000F;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p style="color: #999999; font-size: 16px;">Loading weather data...</p>
+    </div>
+
+    <div class="weather-container" id="weather-container" style="display: none;">
+        <div class="header">
+            <div class="location">Barcelona, Catalonia</div>
+        </div>
+
+        <div class="main-weather">
+            <div class="temperature-display">
+                <div class="weather-icon" id="weather-icon">🌤️</div>
+                <div class="description" id="description">Loading...</div>
+            </div>
+
+            <div class="temp-main" id="temperature">--°</div>
+
+            <div class="weather-details">
+                <div class="detail-item">
+                    <div class="detail-label">Humidity</div>
+                    <div class="detail-value" id="humidity">--%</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Wind</div>
+                    <div class="detail-value" id="wind">-- km/h</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Pressure</div>
+                    <div class="detail-value" id="pressure">-- hPa</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Feels Like</div>
+                    <div class="detail-value" id="feels-like">--°</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="update-time" id="update-time">Last update: --</div>
+        </div>
+    </div>
+
+    <script>
+        // OpenWeatherMap Configuration
+        const OWM_CONFIG = {
+            API_KEY: '2a36e28d26f35bd287084d12d7492576',
+            CITY_ID: '3128760', // Barcelona
+            UNITS: 'metric',
+            LANG: 'es'
+        };
+
+        // Weather icon mapping
+        const WEATHER_ICONS = {
+            '01d': '☀️', '01n': '🌙',
+            '02d': '⛅', '02n': '☁️',
+            '03d': '☁️', '03n': '☁️',
+            '04d': '☁️', '04n': '☁️',
+            '09d': '🌧️', '09n': '🌧️',
+            '10d': '🌦️', '10n': '🌧️',
+            '11d': '⛈️', '11n': '⛈️',
+            '13d': '❄️', '13n': '❄️',
+            '50d': '🌫️', '50n': '🌫️'
+        };
+
+        async function fetchWeatherData() {
+            try {
+                const url = `https://api.openweathermap.org/data/2.5/weather?id=${OWM_CONFIG.CITY_ID}&appid=${OWM_CONFIG.API_KEY}&units=${OWM_CONFIG.UNITS}&lang=${OWM_CONFIG.LANG}`;
+                
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`API returned ${response.status}`);
+                }
+
+                const data = await response.json();
+                updateWeatherDisplay(data);
+                hideLoading();
+
+            } catch (error) {
+                console.error('Error fetching weather:', error);
+                showDemoData();
+                hideLoading();
+            }
+        }
+
+        function updateWeatherDisplay(data) {
+            // Temperature
+            const temp = Math.round(data.main.temp);
+            document.getElementById('temperature').textContent = `${temp}°`;
+
+            // Weather icon and description
+            const iconCode = data.weather[0].icon;
+            const weatherIcon = WEATHER_ICONS[iconCode] || '🌤️';
+            document.getElementById('weather-icon').textContent = weatherIcon;
+            document.getElementById('description').textContent = data.weather[0].description;
+
+            // Details
+            document.getElementById('humidity').textContent = `${data.main.humidity}%`;
+            document.getElementById('wind').textContent = `${Math.round(data.wind.speed * 3.6)} km/h`;
+            document.getElementById('pressure').textContent = `${data.main.pressure} hPa`;
+            document.getElementById('feels-like').textContent = `${Math.round(data.main.feels_like)}°`;
+
+            // Update time
+            const now = new Date();
+            document.getElementById('update-time').textContent = 
+                `Last update: ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+        }
+
+        function showDemoData() {
+            // Simulated data for demo
+            const demoData = {
+                main: {
+                    temp: 18,
+                    humidity: 65,
+                    pressure: 1013,
+                    feels_like: 17
+                },
+                weather: [{
+                    icon: '02d',
+                    description: 'parcialmente nublado'
+                }],
+                wind: {
+                    speed: 3.5
+                }
+            };
+
+            updateWeatherDisplay(demoData);
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('weather-container').style.display = 'flex';
+        }
+
+        // Initialize
+        fetchWeatherData();
+
+        // Update every 10 minutes
+        setInterval(fetchWeatherData, 600000);
+    </script>
+</body>
+</html>
